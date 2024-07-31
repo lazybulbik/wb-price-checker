@@ -12,7 +12,8 @@ def info():
     if art.isdigit():
         art = art
     elif 'https://' in art:
-        art = art.split('/')[-2]
+        # art = art.split('/')[-2]
+        return {'error': True}
     else:
         print(art)
         return {'error': True}
