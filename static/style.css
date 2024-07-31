@@ -1,0 +1,177 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    color: var(--tg-theme-text-color);
+    background: var(--tg-theme-secondary-bg-color);
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;        
+    position: fixed;
+
+    padding: 5%;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.main {
+    background: var(--tg-theme-bg-color);
+}
+
+.menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    margin-bottom: 5%;
+    /* margin-left: 5%;
+    margin-right: 5%; */
+
+    padding: 10%;
+
+    border-radius: 15px;
+}
+
+.big {
+    font-size: 100px;
+}
+
+.center {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.screen {
+    margin: 5%;
+}
+
+.container {
+    display: flex;
+
+    /* margin: 5%; */
+    justify-content: space-around;
+    gap: 5%;
+}
+
+.container > * {
+    flex: 1;
+}
+
+button {
+    width: 100%;
+    height: 100%;
+    
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    padding: 2.5%;
+
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+input {
+    width: 100%;
+    background-color: var(--tg-theme-secondary-bg-color);
+    text-align: center;
+    padding: 5%;
+
+    border: none;
+    border-radius: 10px;
+
+    color: var(--tg-theme-hint-color);
+}
+
+
+input:focus {
+    outline: none;
+}
+
+
+.shake-animation {
+    animation: shake 0.5s;
+    background: red;
+}
+
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.rect {
+    background-color: #e0e0e0;
+    animation: pulse 1.5s infinite;
+
+    border-radius: 10px;
+
+    width: 100%;
+    height: 20px;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+.hidden {
+    display: none;
+}

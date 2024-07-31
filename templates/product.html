@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <input type="text" name="art" id="art" hidden value="{{ art }}">
+</head>
+<body>
+    <div class="screen column">
+        <h3 class="center">✅ Сейчас отслеживается</h3>
+        <br>
+        <div class="block main">
+            <div class="preloader rect">
+                <h3 id="title"></h1>
+            </div>
+        </div>
+        <div class="container row">
+            <div class="block main">
+                <div class="preloader rect">
+                    <h4 id="rating"></h4>
+                </div>
+            </div>
+
+            <div class="block main">
+                <div class="preloader rect">
+                    <h4 id="price"></h4>
+                </div>
+            </div>
+        </div>
+
+        <button id="stop">Снять с отслеживания</button>
+    </div>
+
+    <script src="/static/product.js"></script>
+</body>
+</html>
