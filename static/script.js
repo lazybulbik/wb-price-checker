@@ -40,15 +40,15 @@ document.getElementById('check').addEventListener('click', async function() {
     let art = document.getElementById('art').value;
 
     if (art) {
-        const info = await get_info(art);
-
-        add_product(tg.initDataUnsafe.user.id, art);
-
+        const info = await get_info(art);        
         if (info['error']) {
             shake(document.getElementById('art'));
             document.getElementById('art').value = '';
         }
         else {
+            const art = info['art'];
+            
+            add_product(tg.initDataUnsafe.user.id, art);
             window.location.href = `/product/${art}`;
         }
         

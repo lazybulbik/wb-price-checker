@@ -18,6 +18,7 @@ def info():
         return {'error': True}
 
     info = utils.get_product_info(art)
+    info['art'] = art
 
     print(info)
 
