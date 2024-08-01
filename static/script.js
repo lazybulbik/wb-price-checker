@@ -39,6 +39,13 @@ function shake(object) {
 document.getElementById('check').addEventListener('click', async function() {
     let art = document.getElementById('art').value;
 
+    products = document.getElementsByClassName('product');
+
+    if (products.length >= 5) {
+        shake(document.getElementById('counter'));
+        return;
+    }
+
     if (art) {
         const info = await get_info(art);        
         if (info['error']) {
@@ -47,18 +54,22 @@ document.getElementById('check').addEventListener('click', async function() {
         }
         else {
             const art = info['art'];
-            
-            add_product(tg.initDataUnsafe.user.id, art);
-            window.location.href = `/product/${art}`;
-        }
-        
 
+            add_product(tg.initDataUnsafe.user.id, art);
+            
+            document.getElementById('list').innerHTML += `
+                <div class="product" id="${art}">
+                    <h5 class="product-title">${info['name']}</h5>
+                    <h6 class="product-price">${info['price']}₽</h6>
+                </div>
+            `;
+        }
+    
     }
     else {
         shake(document.getElementById('art'));
     }
 })
-
 
 window.addEventListener('DOMContentLoaded', function() {
     fetch('/api/get_products', {
@@ -70,12 +81,41 @@ window.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.length > 0) {
-            window.location.href = `/product/${data[0]['id']}`
+        this.document.getElementById('counter').innerHTML = `${data.length}/5`;        
+
+        for (let i = 0; i < data.length; i++) {
+            let productDiv = document.createElement('div');
+            productDiv.className = 'product';
+            productDiv.id = data[i]['id'];
+            productDiv.addEventListener('click', function() {
+                Telegram.WebApp.BackButton.show();
+                window.location.href = `/product/${productDiv.id}`;
+            });
+
+            let productTitle = document.createElement('h5');
+            productTitle.className = 'product-title';
+            productTitle.textContent = data[i]['name'];
+
+            let productPrice = document.createElement('h6');
+            productPrice.className = 'product-price';
+            productPrice.textContent = `${data[i]['price']}₽`;
+
+            productDiv.appendChild(productTitle);
+            productDiv.appendChild(productPrice);
+
+            this.document.getElementById('list').appendChild(productDiv);
+
+            // this.document.getElementById('list').innerHTML += `
+            //     <div class="product" id="${data[i]['art']}">
+            //         <h5 class="product-title">${data[i]['name']}</h5>
+            //         <h6 class="product-price">${data[i]['price']}₽</h6>
+            //     </div>
+            // `;
         }
     })
 
-    this.setTimeout(function() {
-        this.document.getElementsByClassName('screen')[0].classList.remove('hidden');
-    }, 3000)
+    preloaders = document.getElementsByClassName('preloader');
+    for (let i = 0; i < preloaders.length; i++) {
+        preloaders[i].classList.remove('rect');
+    }
 })

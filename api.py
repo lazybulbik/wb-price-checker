@@ -20,6 +20,7 @@ def info():
 
     info = utils.get_product_info(art)
     info['art'] = art
+    info['wallet_price'] = int(info['price'] - info['price'] * 0.05)
 
     print(info)
 
@@ -35,12 +36,15 @@ def new():
     user_id = json['user_id']
     product_id = json['product_id']
 
-    price = utils.get_product_info(product_id)['price']
+    info = utils.get_product_info(product_id)
+    price = info['price']
+    name = info['name']
 
     write_data = {
         'id': product_id,
         'price': price,
         'owner': user_id,
+        'name': name
     }
     db.new_write(write_data, 'products')
 

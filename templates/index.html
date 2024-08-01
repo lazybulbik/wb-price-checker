@@ -8,7 +8,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="screen column hidden">
+    <div class="screen column">
         <div class="block main">
             <span class="big">😎</span>
             <br>
@@ -20,9 +20,16 @@
             <br>
             <button id="check">Запустить отслеживание</button>
         </div>
-    </div>
 
-    <!-- <a href="/product/162380382">тест</a> -->
+        <div style="padding: 5%;" class="block main" id="list">            
+            <div class="counter" style="text-align: left; color: var(--tg-theme-hint-color); margin-bottom: 2%; border-radius: 10px;">
+                <h4 id="counter">....</h4>
+            </div>
+
+            <div class="preloader rect" style="height: 20px;"></div>            
+            
+        </div>
+    </div>
 
     <script src="/static/script.js"></script>
 </body>

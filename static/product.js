@@ -2,6 +2,11 @@ tg = Telegram.WebApp;
 
 let art = document.getElementById('art').value;
 
+Telegram.WebApp.onEvent('backButtonClicked', function() {
+    Telegram.WebApp.BackButton.hide();
+    window.location.href = '/';    
+})
+
 async function get_info(art) {
     const response = await fetch ('/api/info', {
         method: 'POST',
@@ -35,6 +40,7 @@ window.addEventListener('load', async function() {
     document.getElementById('title').innerHTML = info['name'];
     document.getElementById('rating').innerHTML = '⭐ ' + info['rating'];
     document.getElementById('price').innerHTML = info['price'] + '₽';
+    document.getElementById('wallet-price').innerHTML = info['wallet_price'] + '₽';
 
     let preloaders = document.getElementsByClassName('preloader');
     for (let i = 0; i < preloaders.length; i++) {

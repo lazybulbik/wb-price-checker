@@ -175,3 +175,29 @@ input:focus {
 .hidden {
     display: none;
 }
+
+.product {
+    width: 100%;
+
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+
+    margin-bottom: 5%;
+    padding: 5%;
+
+    border: var(--tg-theme-section-separator-color) 1px solid;
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.product-title {
+    color: var(--tg-theme-text-color);
+    margin-bottom: 2%;
+}
+
+.product-price {
+    color: var(--tg-theme-subtitle-text-color);
+    margin-left: 2%;
+}
