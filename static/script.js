@@ -27,6 +27,38 @@ function add_product(user_id, product_id) {
     })
 }
 
+function add_product_to_list(data) {
+    let productDiv = document.createElement('div');
+    productDiv.className = 'product';
+
+    if ('art' in data) {
+        productDiv.id = data['art'];
+    }
+    else {
+        productDiv.id = data['id'];
+    }
+    productDiv.addEventListener('click', function() {
+        Telegram.WebApp.BackButton.show();
+        window.location.href = `/product/${productDiv.id}`;
+    });
+
+    let productTitle = document.createElement('h5');
+    productTitle.className = 'product-title';
+    productTitle.textContent = data['name'];
+
+    let productPrice = document.createElement('h6');
+    productPrice.className = 'product-price';
+    productPrice.textContent = `${data['price']}₽`;
+
+    productDiv.appendChild(productTitle);
+    productDiv.appendChild(productPrice);
+
+    document.getElementById('list').appendChild(productDiv);
+    
+    let list = document.getElementsByClassName('product');
+    document.getElementById('counter').innerHTML = `${list.length}/5`;
+}
+
 function shake(object) {
     object.classList.add('shake-animation');
 
@@ -57,12 +89,7 @@ document.getElementById('check').addEventListener('click', async function() {
 
             add_product(tg.initDataUnsafe.user.id, art);
             
-            document.getElementById('list').innerHTML += `
-                <div class="product" id="${art}">
-                    <h5 class="product-title">${info['name']}</h5>
-                    <h6 class="product-price">${info['price']}₽</h6>
-                </div>
-            `;
+            add_product_to_list(info);
         }
     
     }
@@ -81,29 +108,10 @@ window.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => response.json())
     .then(data => {
-        this.document.getElementById('counter').innerHTML = `${data.length}/5`;        
+        // this.document.getElementById('counter').innerHTML = `${data.length}/5`;        
 
         for (let i = 0; i < data.length; i++) {
-            let productDiv = document.createElement('div');
-            productDiv.className = 'product';
-            productDiv.id = data[i]['id'];
-            productDiv.addEventListener('click', function() {
-                Telegram.WebApp.BackButton.show();
-                window.location.href = `/product/${productDiv.id}`;
-            });
-
-            let productTitle = document.createElement('h5');
-            productTitle.className = 'product-title';
-            productTitle.textContent = data[i]['name'];
-
-            let productPrice = document.createElement('h6');
-            productPrice.className = 'product-price';
-            productPrice.textContent = `${data[i]['price']}₽`;
-
-            productDiv.appendChild(productTitle);
-            productDiv.appendChild(productPrice);
-
-            this.document.getElementById('list').appendChild(productDiv);
+            add_product_to_list(data[i]);
 
             // this.document.getElementById('list').innerHTML += `
             //     <div class="product" id="${data[i]['art']}">
