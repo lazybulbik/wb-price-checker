@@ -90,6 +90,8 @@ document.getElementById('check').addEventListener('click', async function() {
             add_product(tg.initDataUnsafe.user.id, art);
             
             add_product_to_list(info);
+            
+            document.getElementById('art').value = '';
         }
     
     }
