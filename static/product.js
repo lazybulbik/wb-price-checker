@@ -54,3 +54,127 @@ document.getElementById('stop').addEventListener('click', function() {
 
     window.location.href = '/';
 })
+
+
+
+let openPopupBtn = document.getElementById('neuro')
+const popup = document.getElementById('popup');
+const closeBtn = document.querySelector('.close-btn');
+
+openPopupBtn.addEventListener('click', () => {
+    popup.style.display = 'flex';
+
+    fetch('/api/predict_price', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({product_id: art}),
+    })
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('price-history').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line', // Тип графика: линейный
+            data: {
+                labels: data['x'], // Подписи оси X
+                datasets: [{
+                    label: 'My First dataset',
+                    data: data['y'], // Данные
+                    fill: false, // Заполнение под графиком
+                    borderColor: 'blueviolet', // Основной цвет линии
+                    segment: {
+                        borderColor: function(context) {
+                            const { p0DataIndex, p1DataIndex } = context;
+                            const length = context.chart.data.labels.length;
+                            
+                            // Проверяем, если текущий сегмент последний
+                            if (p1DataIndex === length - 1) {
+                                // Последний сегмент (между последними двумя точками)
+                                if (data['y'][length - 1] < data['y'][length - 2]) {
+                                    return 'lightgreen'; // Если последнее значение меньше предпоследнего
+                                } else {
+                                    return 'red'; // Если последнее значение не меньше предпоследнего
+                                }
+                            } else {
+                                return 'blueviolet'; // Все остальные сегменты
+                            }
+                        }
+                    },
+                    tension: 0.1, // Напряжение линии (0 для прямых линий)
+                    pointBackgroundColor: function(context) {
+                        const index = context.dataIndex;
+                        const length = context.chart.data.labels.length;
+                        
+                        // Если это последняя точка
+                        if (index === length - 1) {
+                            // Определяем цвет последнего сегмента
+                            if (data['y'][length - 1] < data['y'][length - 2]) {
+                                return 'lightgreen'; // Если последнее значение меньше предпоследнего
+                            } else {
+                                return 'red'; // Если последнее значение не меньше предпоследнего
+                            }
+                        } else {
+                            return 'blueviolet'; // Цвет всех остальных точек
+                        }
+                    },
+                    pointBorderColor: function(context) {
+                        const index = context.dataIndex;
+                        const length = context.chart.data.labels.length;
+                        
+                        // Если это последняя точка
+                        if (index === length - 1) {
+                            // Определяем цвет последнего сегмента
+                            if (data['y'][length - 1] < data['y'][length - 2]) {
+                                return 'lightgreen'; // Если последнее значение меньше предпоследнего
+                            } else {
+                                return 'red'; // Если последнее значение не меньше предпоследнего
+                            }
+                        } else {
+                            return 'blueviolet'; // Цвет всех остальных точек
+                        }
+                    }                    
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: false // Убрать ось X
+                    },
+                    y: {
+                        display: false, // Убрать ось Y
+                        beginAtZero: true // Начало оси Y с нуля
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Убрать легенду
+                    },
+                    tooltip: {
+                        enabled: false // Убрать подписи при наведении
+                    }
+                }
+            }        
+        });          
+        if (data['y'][data['y'].length - 1] - 1 < data['y'][data['y'].length - 2]) {
+            caption = 'Скорее всего цена понизится'
+        } else {
+            caption = 'Скорее всего цена повысится'
+        }
+
+        document.getElementById('caption').innerHTML = caption;
+        document.getElementsByClassName('preloader-price')[0].classList.remove('rect');
+    })
+
+    console.log(priceHistory)
+});
+
+closeBtn.addEventListener('click', () => {
+    popup.style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target === popup) {
+        popup.style.display = 'none';
+    }
+});

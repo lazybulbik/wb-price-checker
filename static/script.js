@@ -48,7 +48,7 @@ function add_product_to_list(data) {
 
     let productPrice = document.createElement('h6');
     productPrice.className = 'product-price';
-    productPrice.textContent = `${data['price']}₽`;
+    productPrice.textContent = `${data['price']}₽`;        
 
     productDiv.appendChild(productTitle);
     productDiv.appendChild(productPrice);

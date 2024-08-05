@@ -1,7 +1,9 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, jsonify
 
 from loader import app, db
 import utils
+
+from predictor import Predictor
 
 
 @app.route('/api/info', methods=['POST'])
@@ -67,3 +69,17 @@ def get_products():
     user_id = json['user_id']
 
     return db.get_data({'owner': user_id}, 'products')
+
+
+@app.route('/api/predict_price', methods=['POST'])
+# @cache.cached(timeout=60, query_string=True)
+def predict_price():
+    json = request.get_json()
+    product_id = json['product_id']
+
+    x, y = Predictor().predict(product_id)
+
+    # Создаем ответ
+    response = jsonify({'x': x, 'y': y})
+    
+    return response
