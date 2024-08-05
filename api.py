@@ -1,9 +1,9 @@
 from flask import Flask, request, redirect, render_template, jsonify
 
-from loader import app, db
+from loader import app, db, db_url
 import utils
 
-from predictor import Predictor
+import requests
 
 
 @app.route('/api/info', methods=['POST'])
@@ -77,9 +77,6 @@ def predict_price():
     json = request.get_json()
     product_id = json['product_id']
 
-    x, y = Predictor().predict(product_id)
-
-    # Создаем ответ
-    response = jsonify({'x': x, 'y': y})
+    response = requests.post(f"{db_url}/api/predict_price", json={'product_id': product_id}).json()
     
     return response

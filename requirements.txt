@@ -1,6 +1,2 @@
 flask
 requests
-asyncio
-aiohttp
-numpy
-scikit-learn
