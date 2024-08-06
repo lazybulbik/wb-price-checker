@@ -1,9 +1,13 @@
-from flask import Flask, request, redirect, render_template, jsonify
+from flask import Flask, request, redirect, render_template, jsonify, make_response
 
-from loader import app, db, db_url
+from loader import app, db, db_url, BUFFER
 import utils
 
 import requests
+import jwt
+import time
+
+KEY = 'key'
 
 
 @app.route('/api/info', methods=['POST'])
@@ -34,6 +38,22 @@ def info():
 
 @app.route('/api/new', methods=['POST'])
 def new():
+    token = request.cookies.get('auth_token')
+
+    exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+
+    if exp < time.time():
+        return {'status': 'error'}
+
+    json = request.get_json()
+    user_id = json['user_id']
+
+    if user_id not in BUFFER:
+        return {'status': 'error'}
+    
+    if BUFFER[user_id] != token:
+        return {'status': 'error'}
+        
     json = request.get_json()
     user_id = json['user_id']
     product_id = json['product_id']
@@ -55,6 +75,22 @@ def new():
 
 @app.route('/api/delete_product', methods=['POST'])
 def delete():
+    token = request.cookies.get('auth_token')
+
+    exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+
+    if exp < time.time():
+        return {'status': 'error'}
+
+    json = request.get_json()
+    user_id = json['user_id']
+
+    if user_id not in BUFFER:
+        return {'status': 'error'}
+    
+    if BUFFER[user_id] != token:
+        return {'status': 'error'}
+
     json = request.get_json()
     product_id = json['product_id']
 
@@ -65,10 +101,55 @@ def delete():
 
 @app.route('/api/get_products', methods=['POST'])
 def get_products():
+    token = request.cookies.get('auth_token')
+
+    exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+
+    if exp < time.time():
+        return {'status': 'error'}
+
     json = request.get_json()
     user_id = json['user_id']
 
+    if user_id not in BUFFER:
+        return {'status': 'error'}
+    
+    if BUFFER[user_id] != token:
+        return {'status': 'error'}
+
     return db.get_data({'owner': user_id}, 'products')
+
+
+@app.route('/api/auth', methods=['POST'])
+def auth():
+    try:
+        token = request.cookies.get('auth_token')
+        exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+
+        if exp > time.time():
+            return {'status': 'ok'}  
+    except:
+        pass
+
+    print('new token')
+
+    json = request.get_json()
+
+    query_string = json['tgWebAppData']
+
+    payload = {
+        'query': query_string,
+        'exp': time.time() + 3600
+    }
+
+    token = jwt.encode(payload, KEY, algorithm='HS256')
+
+    response = make_response(jsonify({'message': 'Token set in cookies!'}))
+    response.set_cookie('auth_token', token, httponly=True, secure=True)
+
+    BUFFER[utils.get_user_id(query_string)] = token
+
+    return response
 
 
 @app.route('/api/predict_price', methods=['POST'])

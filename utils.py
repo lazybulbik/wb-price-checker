@@ -16,3 +16,23 @@ def get_product_info(product_id):
         url = f'https://www.wildberries.ru/catalog/{product_id}/detail.aspx'
 
         return {'name': name, 'price': price, 'brand': brand, 'rating': rating, 'feedbacks': feedbacks, 'url': url}
+
+
+import urllib.parse
+import json
+
+def get_user_id(query):
+    # Ссылка, из которой нужно извлечь user_id
+    url = 'query_id=AAFykaotAgAAAHKRqi1VbwQt&user=%7B%22id%22%3A5061120370%2C%22first_name%22%3A%22Bulbik%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22lazy_bulbik%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1722929651&hash=4ff79ab5066faa0434c4953d8b76ce79643179d75d004c2981c4c6f1faa0aafe'
+
+    # Разбираем URL на компоненты
+    parsed_url = urllib.parse.parse_qs(url)
+
+    # Извлекаем параметр 'user' и декодируем его
+    user_param = parsed_url['user'][0]
+    user_data = json.loads(urllib.parse.unquote(user_param))
+
+    # Извлекаем user_id
+    user_id = user_data['id']
+
+    return user_id

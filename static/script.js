@@ -1,6 +1,16 @@
 tg = Telegram.WebApp;
 tg.expand();
 
+function parseHashParams() {
+    const hash = window.location.hash.substr(1); // Убираем #
+    const params = {};
+    hash.split('&').forEach(pair => {
+        const [key, value] = pair.split('=');
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+    });
+    return params;
+}
+
 async function get_info(art) {
     const response = await fetch ('/api/info', {
         method: 'POST',
@@ -8,6 +18,7 @@ async function get_info(art) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({art: art}),
+        credentials: 'include'
     })
 
     if (response.ok) {
@@ -24,6 +35,7 @@ function add_product(user_id, product_id) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({user_id: user_id, product_id: product_id}),
+        credentials: 'include'
     })
 }
 
@@ -100,13 +112,31 @@ document.getElementById('check').addEventListener('click', async function() {
     }
 })
 
-window.addEventListener('DOMContentLoaded', function() {
-    fetch('/api/get_products', {
+window.addEventListener('DOMContentLoaded', async function() {    
+    const params = parseHashParams();
+    await fetch('/api/auth', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params),
+        credentials: 'include'
+    }).then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    
+
+    await fetch('/api/get_products', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({user_id: tg.initDataUnsafe.user.id}),
+        credentials: 'include'
     })
     .then(response => response.json())
     .then(data => {

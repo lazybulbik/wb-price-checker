@@ -30,6 +30,7 @@ function delete_product(user_id, product_id) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({user_id: user_id, product_id: product_id}),
+        credentials: 'include'
     })
 }
 
