@@ -40,18 +40,15 @@ def info():
 def new():
     token = request.cookies.get('auth_token')
 
-    exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+    token = jwt.decode(token, KEY, algorithms='HS256')
 
-    if exp < time.time():
+    if token['exp'] < time.time():
         return {'status': 'error'}
 
     json = request.get_json()
     user_id = json['user_id']
 
-    if user_id not in BUFFER:
-        return {'status': 'error'}
-    
-    if BUFFER[user_id] != token:
+    if str(user_id) != str(token['user']):
         return {'status': 'error'}
         
     json = request.get_json()
@@ -77,18 +74,15 @@ def new():
 def delete():
     token = request.cookies.get('auth_token')
 
-    exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+    token = jwt.decode(token, KEY, algorithms='HS256')
 
-    if exp < time.time():
+    if token['exp'] < time.time():
         return {'status': 'error'}
 
     json = request.get_json()
     user_id = json['user_id']
 
-    if user_id not in BUFFER:
-        return {'status': 'error'}
-    
-    if BUFFER[user_id] != token:
+    if str(user_id) != str(token['user']):
         return {'status': 'error'}
 
     json = request.get_json()
@@ -103,18 +97,15 @@ def delete():
 def get_products():
     token = request.cookies.get('auth_token')
 
-    exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+    token = jwt.decode(token, KEY, algorithms='HS256')
 
-    if exp < time.time():
+    if token['exp'] < time.time():
         return {'status': 'Token expired'}
 
     json = request.get_json()
     user_id = json['user_id']
 
-    if user_id not in BUFFER:
-        return {'status': 'User not found'}
-    
-    if BUFFER[user_id] != token:
+    if str(user_id) != str(token['user']):
         return {'status': 'Token invalid'}
 
     return db.get_data({'owner': user_id}, 'products')
@@ -139,15 +130,14 @@ def auth():
 
     payload = {
         'query': query_string,
-        'exp': time.time() + 3600
+        'exp': time.time() + 3600,
+        'user': utils.get_user_id(query_string)
     }
 
     token = jwt.encode(payload, KEY, algorithm='HS256')
 
     response = make_response(jsonify({'message': 'Token set in cookies!'}))
     response.set_cookie('auth_token', token, httponly=True, secure=True)
-
-    BUFFER[utils.get_user_id(query_string)] = token
 
     return response
 
