@@ -7,8 +7,6 @@ import time
 
 @app.route('/')
 def index():
-    
-
     print(request.cookies)
 
     return render_template('index.html', anticache=time.time())

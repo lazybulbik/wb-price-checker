@@ -106,16 +106,16 @@ def get_products():
     exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
 
     if exp < time.time():
-        return {'status': 'error'}
+        return {'status': 'Token expired'}
 
     json = request.get_json()
     user_id = json['user_id']
 
     if user_id not in BUFFER:
-        return {'status': 'error'}
+        return {'status': 'User not found'}
     
     if BUFFER[user_id] != token:
-        return {'status': 'error'}
+        return {'status': 'Token invalid'}
 
     return db.get_data({'owner': user_id}, 'products')
 
