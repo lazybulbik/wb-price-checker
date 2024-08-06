@@ -115,9 +115,11 @@ def get_products():
 def auth():
     try:
         token = request.cookies.get('auth_token')
-        exp = jwt.decode(token, KEY, algorithms='HS256')['exp']
+        token_data = jwt.decode(token, KEY, algorithms='HS256')
 
-        if exp > time.time():
+        print(token_data)
+
+        if token_data['exp'] > time.time():
             return {'status': 'ok'}  
     except:
         pass
@@ -135,6 +137,8 @@ def auth():
     }
 
     token = jwt.encode(payload, KEY, algorithm='HS256')
+
+    print(payload)
 
     response = make_response(jsonify({'message': 'Token set in cookies!'}))
     response.set_cookie('auth_token', token, httponly=True, secure=True)
