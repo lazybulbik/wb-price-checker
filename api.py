@@ -114,26 +114,29 @@ def get_products():
 @app.route('/api/auth', methods=['POST'])
 def auth():
     expected_keys = ['query', 'exp', 'user']
-    try:
-        token = request.cookies.get('auth_token')
-        token_data = jwt.decode(token, KEY, algorithms='HS256')
+    # try:
+    #     token = request.cookies.get('auth_token')
+    #     token_data = jwt.decode(token, KEY, algorithms='HS256')
 
-        print(token_data)
+    #     print(token_data)
 
-        if token_data['exp'] > time.time():
-            return {'status': 'ok'}  
+    #     if token_data['exp'] > time.time():
+    #         return {'status': 'ok'}  
         
-        for key in expected_keys:
-            if key not in token_data:
-                break
-        else:
-            return {'status': 'ok'}
-    except:
-        pass
+    #     for key in expected_keys:
+    #         if key not in token_data:
+    #             break
+    #     else:
+    #         return {'status': 'ok'}
+    # except:
+    #     pass
 
     print('new token')
 
     json = request.get_json()
+
+    if 'tgWebAppData' not in json:
+        return {'status': 'Have not required parameters'}
 
     query_string = json['tgWebAppData']
 
