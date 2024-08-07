@@ -26,7 +26,7 @@ def info():
 
     info = utils.get_product_info(art)
     info['art'] = art
-    info['wallet_price'] = int(info['price'] - info['price'] * 0.04)
+    info['wallet_price'] = int(info['price'] - info['price'] * 0.05)
 
     print(info)
 
